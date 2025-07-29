@@ -1,7 +1,5 @@
 # Minimal makefile for Sphinx documentation
 
-# You can set these variables from the command line, and also
-# from the environment for the first two.
 SPHINXOPTS       ?=
 SPHINXBUILD      ?= .venv/bin/sphinx-build
 SPHINXAUTOBUILD  ?= .venv/bin/sphinx-autobuild
@@ -10,11 +8,11 @@ PYTHON           ?= .venv/bin/python
 SOURCEDIR        = source
 BUILDDIR         = build
 
-# Put it first so that "make" without argument is like "make help".
+.PHONY: help Makefile setup setup-novenv dev dev-novenv
+
+# Default help target
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
-.PHONY: help Makefile setup dev
 
 # Setup virtual environment and install dependencies
 setup:
@@ -23,11 +21,19 @@ setup:
 	.venv/bin/pip install --upgrade pip && \
 	.venv/bin/pip install -r requirements.txt
 
-# Run sphinx-autobuild for live-reloading docs during development
+# Replit-compatible setup without virtual environment
+setup-novenv:
+	pip install --upgrade pip
+	pip install -r requirements.txt
+
+# Run sphinx-autobuild with venv
 dev:
 	@$(SPHINXAUTOBUILD) "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+# Replit-compatible dev without venv
+dev-novenv:
+	@sphinx-autobuild "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
+
+# Catch-all: route unknown targets to Sphinx
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
